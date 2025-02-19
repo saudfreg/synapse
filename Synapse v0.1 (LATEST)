@@ -1,0 +1,116 @@
+import tkinter as tk
+from tkinter.filedialog import askopenfilename
+import subprocess
+
+ABOUT_TEXT = "Saud Darwish - LVL 3 >>> LVL 9"
+
+
+def newWindow():
+    toplevel = tk.Toplevel(app)
+    label1 = tk.Label(toplevel, text=ABOUT_TEXT, height=50, width=50)
+    label1.pack()
+
+
+def openFile():
+    filepath = askopenfilename()
+    if filepath:
+        with open(filepath, "r") as f:
+            text = f.read()
+            print(text)
+
+
+def terminalCodeExecution():
+    toplevel = tk.Toplevel(app)
+
+    inputField = tk.Entry(toplevel, width=50)
+    inputField.pack(pady=10)
+
+    runButton = tk.Button(toplevel, text="Run", command=lambda: runCode(inputField.get()), width=20, height=2, bg="#4CAF50", fg="white", font=("Arial", 12))
+    runButton.pack()
+
+
+def runCode(code):
+    try:
+        subprocess.run(code, shell=True, check=True)
+        print("Code executed")
+    except subprocess.CalledProcessError as e:
+        print(f"Error executing code: {e}")
+
+
+def showDevicesOnNetwork():
+    output = subprocess.check_output(['arp', '-a'])
+    devices = []
+
+    for line in output.decode('utf-8').splitlines():
+        device = line.split()
+        if device[0] != 'Interface':
+            devices.append(device)
+
+    toplevel = tk.Toplevel(app)
+
+    listbox = tk.Listbox(toplevel)
+    listbox.pack(pady=10)
+
+    for device in devices:
+        listbox.insert(tk.END, device)
+
+
+def showInstructions():
+    toplevel = tk.Toplevel(app)
+    toplevel.title("Password Reset Instructions")
+    toplevel.geometry("500x300+200+200")
+    toplevel.config(background="#FFC8A5")
+
+    label1 = tk.Label(toplevel, text="""To reset the password for another account on a MacBook, you will need to use the macOS recovery system. To do this, you can follow these steps:
+
+1. Turn on your MacBook.
+
+2. Immediately press and hold the Command and R keys.
+
+3. Release the keys when you see the Apple logo.
+
+4. Select your language and click Continue.
+
+5. Click Disk Utility.
+
+6. Select your hard drive and click Erase.
+
+7. Select APFS from the Format drop-down menu and click Erase.
+
+8. Click Done.
+
+9. Click Install macOS.
+
+10. Follow the on-screen instructions to reinstall macOS.
+
+""")
+    label1.pack(padx=20, pady=10)
+
+
+# Main Tkinter application setup
+app = tk.Tk()
+app.title("Synapse V3")
+app.geometry("500x300+200+200")
+app.config(background="#FFC8A5")
+
+# Frame for buttons with padding
+frame = tk.Frame(app, bg="#FFC8A5")
+frame.pack(pady=20)
+
+# Create buttons with improved styles
+b = tk.Button(frame, text="Quit", width=20, height=2, command=app.destroy, bg="#f44336", fg="white", font=("Arial", 12, "bold"))
+button1 = tk.Button(frame, text="What's New", width=20, height=2, command=newWindow, bg="#2196F3", fg="white", font=("Arial", 12, "bold"))
+button2 = tk.Button(frame, text="Find Any File", width=20, height=2, command=openFile, bg="#009688", fg="white", font=("Arial", 12, "bold"))
+button3 = tk.Button(frame, text="Advanced Execution", width=20, height=2, command=terminalCodeExecution, bg="#4CAF50", fg="white", font=("Arial", 12, "bold"))
+button4 = tk.Button(frame, text="Show Devices on Network", width=20, height=2, command=showDevicesOnNetwork, bg="#FF9800", fg="white", font=("Arial", 12, "bold"))
+button5 = tk.Button(frame, text="Password Reset", width=20, height=2, command=showInstructions, bg="#673AB7", fg="white", font=("Arial", 12, "bold"))
+
+# Add buttons to the frame using grid layout
+b.grid(row=0, column=0, padx=10, pady=10)
+button1.grid(row=1, column=0, padx=10, pady=10)
+button2.grid(row=2, column=0, padx=10, pady=10)
+button3.grid(row=3, column=0, padx=10, pady=10)
+button4.grid(row=4, column=0, padx=10, pady=10)
+button5.grid(row=5, column=0, padx=10, pady=10)
+
+app.mainloop()
